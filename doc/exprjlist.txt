@@ -1,0 +1,93 @@
+*exprjlist.txt*    A file browser focus on your current working directory.
+
+Author:         DaSea(dhf0214@126.com)
+Licence:        MIT licence
+Version:        0.1.0
+
+==============================================================================
+Contents                                       *exprjlist*  *exprjlist-contents*
+
+         1. Intro ........................... |exprjlist-intro|
+         2. Requirements .................... |exprjlist-requirements|
+         3. Usage ........................... |exprjlist-usage|
+              Commands ...................... |exprjlist-commands|
+              Key mappings .................. |exprjlist-mappings|
+         4. Configuration ................... |exprjlist-configuration|
+              Highlight colours ............. |exprjlist-highlighting|
+         5. Functions ....................... |exprjlist-functions|
+         6. Troubleshooting & Known issues .. |exprjlist-issues|
+         7. History ......................... |exprjlist-history|
+
+==============================================================================
+1. Intro                                                     *exprjlist-intro*
+
+ex-prjlist is a file browser focus on your current working directory.
+
+==============================================================================
+2. Requirements                                       *exprjlist-requirements*
+
+The following requirements have to be met in order to be able to use
+ex-prjlist:
+
+  - Vim 6.0 or higher
+  - ex-*(plugin): (https://github.com/exvim/*)
+
+==============================================================================
+3. Usage                                                     *exprjlist-usage*
+
+Create new project file ~
+
+Open a window to list your percently project, open the Vim. Type
+|:EXProjectList| , select one item, and enter to open it!
+
+------------------------------------------------------------------------------
+COMMANDS                                                  *exprjlist-commands*
+
+:EXProjectList
+    List your exvim project file in your computer(list exvim filetype file).
+------------------------------------------------------------------------------
+KEY MAPPINGS                                              *exprjlist-mappings*
+
+Default key mappings:
+
+                                                            *'exprjlist-<leader>pl'*
+<leader>pl
+    List your project file
+==============================================================================
+4. Configuration                                     *exprjlist-configuration*
+
+                                                           *g:exprj_list_cache_directory*
+g:exprj_list_cache_directory~
+Default: '~/.cache'
+
+The default path of save cache file, the final file is:
+    g:exprj_list_cache_directory.'/exprj/exlist'
+
+                                                        *g:exprj_list_win_szie*
+g:exprj_list_win_szie~
+Default: 10
+
+The window size of list window.
+
+                                                         *g:exprj_list_win_pos*
+g:exprj_list_win_pos~
+Default: 'botright'
+Options: 'botright', 'topleft'
+
+The position of project window.
+
+------------------------------------------------------------------------------
+HIGHLIGHT COLOURS                                     *exprjlist-highlighting*
+TODO
+==============================================================================
+5. Functions                                             *exprjlist-functions*
+
+==============================================================================
+6. Troubleshooting & Known issues                           *exprjlist-issues*
+
+
+==============================================================================
+7. History                                                 *exprjlist-history*
+
+==============================================================================
+ vim: tw=78 ts=8 sw=4 sts=4 et ft=help
