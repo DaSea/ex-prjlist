@@ -50,11 +50,11 @@ let s:prj_dict = {}
 let s:list_updated = 0
 
 " title
-let s:win_title = '-EXPRJ_LIST-'
+let s:win_title = '_EXPRJ_LIST_'
 
-" winpos(topleft, botright)
+" winpos(aboveleft, belowright)
 if !exists('g:exprj_list_win_pos')
-    let g:exprj_list_win_pos = 'botright'
+    let g:exprj_list_win_pos = 'belowright'
 endif
 
 " winsize
@@ -120,7 +120,7 @@ function! exprjlist#append(path) abort "{{{
     endif
 endfunction "}}}
 
-function! exprj#save() abort "{{{
+function! exprjlist#save() abort "{{{
     if !s:list_updated
         " echo 'No update item'
         return
@@ -194,19 +194,78 @@ endfunction "}}}
 
 function! exprjlist#init_window() abort "{{{
     " set project list context to windows
+    " will call ftplugin/exprjlist.vim
     set filetype=exprjlist
-    augroup exprj
-        au! BufWinLeave <buffer> call <SID>on_close()
-    augroup END
 
     if line('$') <= 1
         silent call append(0, keys(s:prj_dict))
     endif
+
+    " Delete the last empty line
+    let curline = getline('.')
+    if strlen(curline) == 0
+        normal! dd
+    endif
+    normal! gg
 endfunction "}}}
 
-" commands{{{
-command! EXProjectList call exprjlist#toggle_window()
-"}}}
+function! exprjlist#bind_mappings() abort "{{{
+    " Define <cr> action
+    silent exec 'nnoremap <silent> <buffer> <CR> :call exprjlist#select_item()<CR>'
+    " Define exit action
+    silent exec 'nnoremap <silent> <buffer> q :call exprjlist#close_window()<CR>'
+    " Define jump to next line action
+    silent exec 'nnoremap <silent> <buffer> j :call exprjlist#jump_next_line()<CR>'
+    " Define jump to previous line action
+    silent exec 'nnoremap <silent> <buffer> k :call exprjlist#jump_previous_line()<CR>'
+    " Define other action
+endfunction "}}}
+
+function! exprjlist#select_item() abort "{{{
+    " Get context of current line
+    let filename = getline('.')
+    call exprjlist#close_window()
+
+    " Need close other windows
+    let win_count = winnr('$')
+    let win_idx = win_count
+    while win_idx >= 1
+        exe win_idx . 'wincmd w'
+        let ftype = &filetype
+        if ftype ==? 'exproject'
+            try
+                close
+            catch /E444:/
+                echo 'Can not close the last window!'
+            endtry
+        endif
+
+        let win_idx = win_idx - 1
+    endwhile
+
+    execute ' silent edit ' . escape(filename, ' ')
+endfunction "}}}
+
+function! exprjlist#jump_next_line() abort "{{{
+    " Go to next line, if in last line, go to first line
+    let cur_line = line('.')
+    let end_line = line('$')
+    if cur_line == end_line
+        normal! gg
+    else
+        normal! j
+    endif
+endfunction "}}}
+
+function! exprjlist#jump_previous_line() abort
+    " Go to previous line, if in first line, go to the last line
+    let cur_line = line('.')
+    if 1 == cur_line
+        normal! G
+    else
+        normal! k
+    endif
+endfunction
 
 " Private function{{{
 function! s:on_close() abort

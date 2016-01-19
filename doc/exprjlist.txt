@@ -51,7 +51,7 @@ KEY MAPPINGS                                              *exprjlist-mappings*
 Default key mappings:
 
                                                             *'exprjlist-<leader>pl'*
-<leader>pl
+<leader>el
     List your project file
 ==============================================================================
 4. Configuration                                     *exprjlist-configuration*
@@ -71,8 +71,8 @@ The window size of list window.
 
                                                          *g:exprj_list_win_pos*
 g:exprj_list_win_pos~
-Default: 'botright'
-Options: 'botright', 'topleft'
+Default: 'belowright'
+Options: 'belowright', 'aboveleft'
 
 The position of project window.
 

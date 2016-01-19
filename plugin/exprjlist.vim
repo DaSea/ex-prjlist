@@ -39,6 +39,15 @@ augroup END
 
 let g:loaded_ex_prjlist= 1
 
+" commands{{{
+command! EXProjectList call exprjlist#toggle_window()
+"}}}
+
+" Key mapping {{{
+nnoremap <leader>el :call exprjlist#toggle_window()<CR>
+"}}}
+
+" Private function {{{
 function! s:append(path) "{{{
     " echomsg a:path
     if a:path == ''
@@ -47,7 +56,7 @@ function! s:append(path) "{{{
 
     call exprjlist#append(a:path)
 endfunction "}}}
-
+"}}}
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
