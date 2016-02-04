@@ -202,6 +202,7 @@ function! exprjlist#init_window() abort "{{{
     endif
 
     " Delete the last empty line
+    normal! G
     let curline = getline('.')
     if strlen(curline) == 0
         normal! dd
@@ -218,7 +219,14 @@ function! exprjlist#bind_mappings() abort "{{{
     silent exec 'nnoremap <silent> <buffer> j :call exprjlist#jump_next_line()<CR>'
     " Define jump to previous line action
     silent exec 'nnoremap <silent> <buffer> k :call exprjlist#jump_previous_line()<CR>'
+    " Forbid i 等
+    silent exec 'nnoremap <silent> <buffer> i :call exprjlist#join_you()<CR>'
     " Define other action
+endfunction "}}}
+
+function! exprjlist#join_you() abort "{{{
+    echo "Your action is forbided!"
+    return
 endfunction "}}}
 
 function! exprjlist#select_item() abort "{{{
@@ -257,7 +265,7 @@ function! exprjlist#jump_next_line() abort "{{{
     endif
 endfunction "}}}
 
-function! exprjlist#jump_previous_line() abort
+function! exprjlist#jump_previous_line() abort "{{{
     " Go to previous line, if in first line, go to the last line
     let cur_line = line('.')
     if 1 == cur_line
@@ -265,7 +273,7 @@ function! exprjlist#jump_previous_line() abort
     else
         normal! k
     endif
-endfunction
+endfunction "}}}
 
 " Private function{{{
 function! s:on_close() abort
