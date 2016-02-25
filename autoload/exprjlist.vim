@@ -219,6 +219,8 @@ function! exprjlist#bind_mappings() abort "{{{
     silent exec 'nnoremap <silent> <buffer> j :call exprjlist#jump_next_line()<CR>'
     " Define jump to previous line action
     silent exec 'nnoremap <silent> <buffer> k :call exprjlist#jump_previous_line()<CR>'
+    " Delete project
+    silent exec 'nnoremap <silent> <buffer> dd :call exprjlist#delete_prj()<CR>'
     " Forbid i 等
     silent exec 'nnoremap <silent> <buffer> i :call exprjlist#join_you()<CR>'
     " Define other action
@@ -272,6 +274,33 @@ function! exprjlist#jump_previous_line() abort "{{{
         normal! G
     else
         normal! k
+    endif
+endfunction "}}}
+
+function! exprjlist#delete_prj() abort "{{{
+    " 获取当前行的工程名,并判断.exvim文件夹是否存在,如果存在,则删除
+    let cur_prj = getline('.')
+    " 提取路径
+    let prj_path = fnamemodify(cur_prj, ":p:h")
+    " 询问是否删除
+    call inputsave()
+    let answer = input("Are you sure delete? Y/N", "N")
+    call inputrestore()
+    if 'y' ==? answer
+        " 删除文件
+        if 0 == delete(cur_prj)
+            echo "Delete project success!"
+        endif
+        " 删除文件夹
+        let prj_dir = prj_path + '/.exvim'
+        echo prj_dir
+        if isdirectory(prj_dir)
+            " 如果存在,则删除文件
+            call system('rm -rf ' . prj_dir)
+        endif
+
+        " 从字典中删除
+        remove(g:prj_dict, cur_prj)
     endif
 endfunction "}}}
 
