@@ -22,7 +22,6 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
-
 if exists('g:loaded_ex_prjlist')
   finish
 endif
@@ -32,7 +31,6 @@ set cpo&vim
 
 augroup exprj
     autocmd!
-    autocmd VimEnter * call exprjlist#load()
     autocmd BufNewFile,BufRead *.exvim call s:append(expand('<amatch>'))
     autocmd VimLeavePre * call exprjlist#save()
 augroup END

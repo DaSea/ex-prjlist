@@ -22,11 +22,6 @@
 "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 " }}}
 "=============================================================================
-"TODO list{{{
-"1, 加载文件 $HOME/.cache/exprj/exlist
-"2, 保存文件; 保存文件时需要判断读取文件时, 与文件的最后修改时间是否相同,不同的话,需要进行重新load
-"3, 添加条令;
-"}}}
 
 function! s:substitute_path_separator(path) "{{{
   return s:is_windows ? substitute(a:path, '\\', '/', 'g') : a:path
@@ -38,13 +33,15 @@ let s:is_windows = has('win16') || has('win32') || has('win64') || has('win95')
 if !exists('g:exprjlist_cache_directory')
     let g:exprj_list_cache_directory = expand('~/.cache')
 endif
-
 let s:cache_file = s:substitute_path_separator(g:exprj_list_cache_directory . '/exprj/exlist')
 
 let s:cache_time = -1
 
 " Use dictionary: {path: saved}
 let s:prj_dict = {}
+
+" timer
+let s:clear_timer = -1
 
 " If append new item ,set it to 1
 let s:list_updated = 0
@@ -121,6 +118,10 @@ function! exprjlist#append(path) abort "{{{
 endfunction "}}}
 
 function! exprjlist#save() abort "{{{
+    if empty(s:prj_dict)
+        return
+    endif
+
     if !s:list_updated
         " echo 'No update item'
         return
@@ -139,6 +140,19 @@ endfunction "}}}
 
 " if open, close it; if close , open it
 function! exprjlist#toggle_window() abort "{{{
+    if has("timers")
+        if s:clear_timer == -1
+            " After 1 minutes, clear memory
+            let s:clear_timer = timer_start(60000, 'ClearMemory', {'repeat': 1})
+            call exprjlist#load()
+        endif
+    else
+        if empty(s:prj_dict)
+            call exprjlist#load()
+        endif
+    endif
+
+    " open project windows
     let result = exprjlist#close_window()
     if 0 == result
         call exprjlist#open_window()
@@ -284,23 +298,25 @@ function! exprjlist#delete_prj() abort "{{{
     let prj_path = fnamemodify(cur_prj, ":p:h")
     " 询问是否删除
     call inputsave()
-    let answer = input("Are you sure delete? Y/N", "N")
+    let answer = input("Are you sure delete(Y/N)> ")
     call inputrestore()
     if 'y' ==? answer
         " 删除文件
         if 0 == delete(cur_prj)
-            echo "Delete project success!"
+            echomsg "<Delete project config file success!"
         endif
+
         " 删除文件夹
-        let prj_dir = prj_path + '/.exvim'
-        echo prj_dir
+        let prj_dir = prj_path . '/.exvim'
         if isdirectory(prj_dir)
-            " 如果存在,则删除文件
-            call system('rm -rf ' . prj_dir)
+            " 如果存在,则删除文件夹
+            call ex#os#del_folder(prj_dir)
         endif
 
         " 从字典中删除
-        remove(g:prj_dict, cur_prj)
+        call remove(s:prj_dict, cur_prj)
+        " 从显示界面移除
+        normal! dd
     endif
 endfunction "}}}
 
@@ -317,4 +333,15 @@ function! s:savelist(path, list) abort
 
     call writefile(a:list, path)
 endfunction
+
+function! ClearMemory(timer) abort
+    echomsg "Clear memory and stop timer"
+    if -1 != a:timer
+        call timer_stop(a:timer)
+    endif
+    let s:clear_timer = -1
+
+    call exprjlist#save()
+    let s:prj_dict = {}
+endfunction " }}}
 "}}}
