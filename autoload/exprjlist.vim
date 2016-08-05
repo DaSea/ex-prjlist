@@ -306,11 +306,19 @@ function! exprjlist#delete_prj() abort "{{{
             echomsg "<Delete project config file success!"
         endif
 
+        " 获取工程名
+        let prjName = fnamemodify(cur_prj, ":t")
+
         " 删除文件夹
         let prj_dir = prj_path . '/.exvim'
         if isdirectory(prj_dir)
             " 如果存在,则删除文件夹
             call ex#os#del_folder(prj_dir)
+        else
+            let prj_dir = prj_path . '/' . prjName
+            if isdirectory(prj_dir)
+                call ex#os#del_folder(prj_dir)
+            endif
         endif
 
         " 从字典中删除
