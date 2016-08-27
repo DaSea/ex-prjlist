@@ -32,17 +32,21 @@ set cpo&vim
 augroup exprj
     autocmd!
     autocmd BufNewFile,BufRead *.exvim call s:append(expand('<amatch>'))
-    autocmd VimLeavePre * call exprjlist#save()
+    autocmd VimLeavePre * call exprjlist#exit()
+    autocmd VimLeavePre * call projectmgr#exit()
 augroup END
 
 let g:loaded_ex_prjlist= 1
 
 " commands{{{
 command! EXProjectList call exprjlist#toggle_window()
+command! ProjectMgrSave call s:save_project()
+command! ProjectMgrList call projectmgr#toggle_window()
 "}}}
 
 " Key mapping {{{
 nnoremap <leader>el :call exprjlist#toggle_window()<CR>
+nnoremap <leader>al :call projectmgr#toggle_window()<CR>
 "}}}
 
 " Private function {{{
@@ -54,8 +58,32 @@ function! s:append(path) "{{{
 
     call exprjlist#append(a:path)
 endfunction "}}}
+
+" 保存文件夹类型的工程 {{{
+function! s:save_project()
+    let saveName = getcwd()
+    " 使用所在文件的根目录为工程名
+    " 试图进入根目录, 如果没有根目录, 则在当前文件夹
+    call inputsave()
+    let prjName = input("保存路径为: ", saveName)
+    call inputrestore()
+
+    if "" == prjName
+        echo "路径为空, 请确定好路径!"
+        return
+    endif
+
+    if !isdirectory(prjName)
+        echo "路径不合法"
+        return
+    endif
+
+    call projectmgr#append(prjName)
+endfunction " }}}
 "}}}
+
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
 " vim: foldmethod=marker
+

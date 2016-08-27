@@ -47,7 +47,7 @@ let s:clear_timer = -1
 let s:list_updated = 0
 
 " title
-let s:win_title = '_EXPRJ_LIST_'
+let s:win_title = '_PRJ_LIST_'
 
 " winpos(aboveleft, belowright)
 if !exists('g:exprj_list_win_pos')
@@ -75,7 +75,7 @@ function! exprjlist#load() abort "{{{
     endif
 
     for item in plist
-        " TODO 需要验证item是否存在
+        " DONE 需要验证item是否存在
         if filereadable(expand(item))
             let s:prj_dict[item] = 1
         endif
@@ -97,7 +97,7 @@ function! exprjlist#reload() abort "{{{
     " plist 中的项是否在s:prj_dict中
     for item in plist
         if !has_key(s:prj_dict, item)
-            s:prj_dict[item] = 0
+            let s:prj_dict[item] = 0
         endif
     endfor
 endfunction "}}}
@@ -140,16 +140,8 @@ endfunction "}}}
 
 " if open, close it; if close , open it
 function! exprjlist#toggle_window() abort "{{{
-    if has("timers")
-        if s:clear_timer == -1
-            " After 1 minutes, clear memory
-            let s:clear_timer = timer_start(60000, 'ClearMemory', {'repeat': 1})
-            call exprjlist#load()
-        endif
-    else
-        if empty(s:prj_dict)
-            call exprjlist#load()
-        endif
+    if -1 == s:cache_time
+        call exprjlist#load()
     endif
 
     " open project windows
@@ -328,6 +320,12 @@ function! exprjlist#delete_prj() abort "{{{
     endif
 endfunction "}}}
 
+" 退出 {{{
+function! exprjlist#exit() abort
+    call exprjlist#save()
+    let s:prj_dict = {}
+endfunction " }}}
+
 " Private function{{{
 function! s:on_close() abort
     echo 'Wait for add!'
@@ -350,6 +348,8 @@ function! ClearMemory(timer) abort
     let s:clear_timer = -1
 
     call exprjlist#save()
+    let s:list_updated = 0
+    let s:cache_time = -1
     let s:prj_dict = {}
 endfunction " }}}
 "}}}
