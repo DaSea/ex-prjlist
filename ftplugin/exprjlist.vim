@@ -6,6 +6,7 @@ silent! setlocal nobuflisted
 
 silent! setlocal cursorline
 silent! setlocal nonumber
+silent! setlocal norelativenumber
 silent! setlocal nowrap
 silent! setlocal statusline=
 " }}}1
