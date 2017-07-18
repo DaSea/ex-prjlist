@@ -12,7 +12,7 @@ silent! setlocal statusline=
 " }}}1
 
 " Key Mappings {{{1
-call exprjlist#bind_mappings()
+call prjlistwin#bind_mappings()
 " }}}
 
 " vim:ts=4:sw=4:sts=4 et fdm=marker:

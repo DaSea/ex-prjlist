@@ -29,8 +29,9 @@ ex-prjlist is a file browser focus on your current working directory.
 The following requirements have to be met in order to be able to use
 ex-prjlist:
 
-  - Vim 6.0 or higher
+  - Vim 8.0 or higher
   - ex-*(plugin): (https://github.com/exvim/*)
+  - Python3(I test it use python3.5)
 
 ==============================================================================
 3. Usage                                                     *exprjlist-usage*
@@ -38,39 +39,59 @@ ex-prjlist:
 Create new project file ~
 
 Open a window to list your percently project, open the Vim. Type
-|:EXProjectList| , select one item, and enter to open it!
+|:EXPrjCommonDirList| , select one item, and enter to open it!
 
 ------------------------------------------------------------------------------
 COMMANDS                                                  *exprjlist-commands*
 
-:EXProjectList
+:EXPrjCommonDirList
     List your exvim project file in your computer(list exvim filetype file).
+
+:EXPrjVerDirList
+    List your clone of open source project directory!
+
+:EXPrjPlugDirLIst
+    List your plugin directory!
+
+:EXPrjDirSave
+    Save a directory into cache!
+
+:EXPrjVscDirRefresh
+    Refresh vsc directory cache!
 ------------------------------------------------------------------------------
 KEY MAPPINGS                                              *exprjlist-mappings*
 
 Default key mappings:
 
-                                                            *'exprjlist-<leader>pl'*
-<leader>el
-    List your project file
 ==============================================================================
 4. Configuration                                     *exprjlist-configuration*
 
-                                                           *g:exprj_list_cache_directory*
-g:exprj_list_cache_directory~
+                                                           *g:exprjlist_cache_directory*
+g:exprjlist_cache_directory~
 Default: '~/.cache'
 
 The default path of save cache file, the final file is:
-    g:exprj_list_cache_directory.'/exprj/exlist'
+    g:exprjlist_cache_directory.'/exprjlist'
 
-                                                        *g:exprj_list_win_szie*
-g:exprj_list_win_szie~
+                                                           *g:exprjlist_vsc_root_dir*
+g:exprjlist_vsc_root_dir~
+Default: {}
+
+You can define:
+    let g:exprjlist_vsc_root_dir = {"/media/seasea/work/Self/05_gitsrc": "git"}
+
+                                                           *g:exprjlist_vimplug_root_dir*
+g:exprjlist_vimplug_root_dir~
+Default: '~/.vim/plugged'
+
+                                                        *g:exprjlist_win_szie*
+g:exprjlist_win_szie~
 Default: 10
 
 The window size of list window.
 
-                                                         *g:exprj_list_win_pos*
-g:exprj_list_win_pos~
+                                                         *g:exprjlist_win_pos*
+g:exprjlist_win_pos~
 Default: 'belowright'
 Options: 'belowright', 'aboveleft'
 
