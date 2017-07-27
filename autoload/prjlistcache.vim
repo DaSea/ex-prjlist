@@ -16,7 +16,7 @@ let s:exprjlist_cache_py_path = fnamemodify(expand('<sfile>'), ':p:h')
 
 function! prjlistcache#init() abort " 初始化python导入 {{{
     " 创建缓存目录
-    let s:cache_path = g:exprjlist_cache_directory . '/prjmgr'
+    let s:cache_path = g:exprjlist_cache_directory . '/exprjlist'
     if !isdirectory(s:cache_path)
         call mkdir(s:cache_path, "p", 0777)
     endif
