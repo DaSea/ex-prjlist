@@ -90,16 +90,16 @@ function! s:save_project()
     " 使用所在文件的根目录为工程名
     " 试图进入根目录, 如果没有根目录, 则在当前文件夹
     call inputsave()
-    let prjName = input("[exprjlist]保存路径为: ", saveName)
+    let prjName = input("[exprjlist]The saved path: ", saveName)
     call inputrestore()
 
     if "" == prjName
-        echo "[exprjlist]路径为空, 请确定好路径!"
+        echo "[exprjlist]Empty path, please select valid path!"
         return
     endif
 
     if !isdirectory(prjName)
-        echo "[exprjlist]路径不合法"
+        echo "[exprjlist]Invalid path!"
         return
     endif
 

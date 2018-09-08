@@ -9,6 +9,8 @@ silent! setlocal nonumber
 silent! setlocal norelativenumber
 silent! setlocal nowrap
 silent! setlocal statusline=
+
+" silent! setlocal readonly
 " }}}1
 
 " Key Mappings {{{1

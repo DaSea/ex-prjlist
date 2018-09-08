@@ -84,7 +84,7 @@ def fill_vsc_cache():
     vscpath = os.sep.join([cacheroot, 'exprjlist', 'vsclist.txt'])
     vsc_rootdir = vim.eval('g:exprjlist_vsc_root_dir')
     if not os.path.isfile(vscpath):
-        with open(cachepath, 'w', encoding='utf-8', newline='\n') as f:
+        with open(vscpath, 'w', encoding='utf-8', newline='\n') as f:
             for item in vsc_rootdir.items():
                 _filter_vsc_projcect(f, item[1], item[0])
 
